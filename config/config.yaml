@@ -1,0 +1,10 @@
+config:
+  install_tree: {}
+  build_jobs: 4
+  test_stage: /glade/derecho/scratch/$user/temp/spack/cesmdev/25.10/tests
+  source_cache: /glade/derecho/scratch/$user/temp/spack/cache
+  misc_cache: /glade/derecho/scratch/$user/temp/spack/cesmdev/25.10/misc
+  build_stage:
+  - /glade/derecho/scratch/$user/temp/spack/cesmdev/25.10/builds
+  template_dirs:
+  - /glade/u/apps/cesmdev/25.10/envs/build/templates/modules

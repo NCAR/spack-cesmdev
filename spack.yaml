@@ -1,0 +1,90 @@
+# *** NSF NCAR HPC Software Stack Environment ***
+spack:
+  config:
+    install_tree: {}
+    build_jobs: 4
+    test_stage: /glade/derecho/scratch/$user/temp/spack/cesmdev/25.10/tests
+    source_cache: /glade/derecho/scratch/$user/temp/spack/cache
+    misc_cache: /glade/derecho/scratch/$user/temp/spack/cesmdev/25.10/misc
+    build_stage:
+    - /glade/derecho/scratch/$user/temp/spack/cesmdev/25.10/builds
+    template_dirs:
+    - /glade/u/apps/cesmdev/25.10/envs/build/templates/modules
+  include:
+  - /glade/u/apps/derecho/25.10/config/toolchains.yaml
+  - /glade/u/apps/derecho/25.10/config/config.yaml
+  - /glade/u/apps/derecho/25.10/config/packages.yaml
+  - /glade/u/apps/derecho/25.10/config/modules.yaml
+  - /glade/u/apps/derecho/25.10/config/concretizer.yaml
+  - /glade/u/apps/derecho/25.10/config/repos.yaml
+  view: false
+  modules:
+    default:
+      roots:
+        lmod: /glade/u/apps/cesmdev/modules/25.10
+  mirrors:
+    ncar_mirror_global:
+      url: s3://spack-cache-cesmdev
+      profile: boreas
+    ncar_mirror_local: /glade/u/apps/cesmdev/mirror
+  concretizer:
+    unify: false
+  bootstrap:
+    enable: true
+    root: /glade/u/apps/cesmdev/25.10/bootstrap
+    sources:
+    - name: github-actions-v0.6
+      metadata: $spack/share/spack/bootstrap/github-actions-v0.6
+    - name: github-actions-v0.5
+      metadata: $spack/share/spack/bootstrap/github-actions-v0.5
+    - name: spack-install
+      metadata: $spack/share/spack/bootstrap/spack-install
+    trusted:
+    # By default we trust bootstrapping from sources and from binaries
+    # produced on Github via the workflow
+      github-actions-v0.6: true
+      github-actions-v0.5: true
+      spack-install: true
+  upstreams:
+    csg-derecho:
+      install_tree: /glade/u/apps/derecho/25.10/spack/opt/spack
+  specs:
+  - parallelio@2.6.8+logging~mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^hdf5 %gcc@14.3.0
+  - parallelio@2.6.8+logging~mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^hdf5 %nvhpc@25.9
+  - parallelio@2.6.8+logging~mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^hdf5 %oneapi@2025.2.1
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@8.1.32 %gcc
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@8.1.32 %nvhpc
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@8.1.32 %oneapi
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@8.1.32 %gcc
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@8.1.32 %nvhpc
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@8.1.32 %oneapi
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@8.1.32 %gcc ^hdf5 %gcc@14.3.0 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@8.1.32 %nvhpc ^hdf5 %nvhpc@25.9 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@8.1.32 %oneapi ^hdf5 %oneapi@2025.2.1 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@8.1.32 %gcc ^hdf5 %gcc@14.3.0 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@8.1.32 %nvhpc ^hdf5 %nvhpc@25.9 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@8.1.32 %oneapi ^hdf5 %oneapi@2025.2.1 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@9.0.0 %gcc
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^openmpi@5.0.9 %gcc@14.3.0
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@9.0.0 %nvhpc
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^openmpi@5.0.9 %nvhpc@25.9
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@9.0.0 %oneapi
+  - netcdf@4.9.3+debug+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^openmpi@5.0.9 %oneapi@2025.2.1
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@9.0.0 %gcc
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^openmpi@5.0.9 %gcc@14.3.0
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@9.0.0 %nvhpc
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^openmpi@5.0.9 %nvhpc@25.9
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@9.0.0 %oneapi
+  - parallel-netcdf@1.14.1 cppflags=-g %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^openmpi@5.0.9 %oneapi@2025.2.1
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@9.0.0 %gcc ^hdf5 %gcc@14.3.0 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^hdf5 %gcc@14.3.0 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^openmpi@5.0.9 %gcc@14.3.0 ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@9.0.0 %nvhpc ^hdf5 %nvhpc@25.9 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^hdf5 %nvhpc@25.9 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^openmpi@5.0.9 %nvhpc@25.9 ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@9.0.0 %oneapi ^hdf5 %oneapi@2025.2.1 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g
+  - parallelio@2.6.8+logging+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^hdf5 %oneapi@2025.2.1 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^openmpi@5.0.9 %oneapi@2025.2.1 ^parallel-netcdf cppflags=-g
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^cray-mpich@9.0.0 %gcc ^hdf5 %gcc@14.3.0 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=gcc@14.3.0 %[when='%cxx'] cxx=gcc@14.3.0 %[when='%fortran'] fortran=gcc@14.3.0 %[when='%blas'] blas=openblas@0.3.30 %[when='%lapack'] lapack=openblas@0.3.30 ^hdf5 %gcc@14.3.0 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^openmpi@5.0.9 %gcc@14.3.0 ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^cray-mpich@9.0.0 %nvhpc ^hdf5 %nvhpc@25.9 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=nvhpc@25.9 %[when='%cxx'] cxx=nvhpc@25.9 %[when='%fortran'] fortran=nvhpc@25.9 %[when='%blas'] blas=nvhpc@25.9 %[when='%lapack'] lapack=nvhpc@25.9 ^hdf5 %nvhpc@25.9 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^openmpi@5.0.9 %nvhpc@25.9 ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^cray-mpich@9.0.0 %oneapi ^hdf5 %oneapi@2025.2.1 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^parallel-netcdf cppflags=-g ^parallelio+logging
+  - esmf@8.9.1+debug+mpi %[when='%c'] c=oneapi@2025.2.1 %[when='%cxx'] cxx=oneapi@2025.2.1 %[when='%fortran'] fortran=oneapi@2025.2.1 %[when='%blas'] blas=intel-oneapi-mkl@2025 %[when='%lapack'] lapack=intel-oneapi-mkl@2025 ^hdf5 %oneapi@2025.2.1 ^netcdf-c+logging ^netcdf-fortran cppflags=-g ^openmpi@5.0.9 %oneapi@2025.2.1 ^parallel-netcdf cppflags=-g ^parallelio+logging

@@ -1,0 +1,7 @@
+include:
+- /glade/u/apps/derecho/25.10/config/toolchains.yaml
+- /glade/u/apps/derecho/25.10/config/config.yaml
+- /glade/u/apps/derecho/25.10/config/packages.yaml
+- /glade/u/apps/derecho/25.10/config/modules.yaml
+- /glade/u/apps/derecho/25.10/config/concretizer.yaml
+- /glade/u/apps/derecho/25.10/config/repos.yaml
